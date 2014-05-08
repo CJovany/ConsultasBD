@@ -1,0 +1,308 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="utf-8">
+<title>Consulta Mobile</title>
+<link href="jquery-mobile/jquery.mobile.theme-1.0.min.css" rel="stylesheet" type="text/css"/>
+<link href="jquery-mobile/jquery.mobile.structure-1.0.min.css" rel="stylesheet" type="text/css"/>
+
+<script src="jquery-mobile/jquery-1.6.4.min.js" type="text/javascript"></script>
+<script src="jquery-mobile/jquery.mobile-1.0.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+$(function(){
+	document.addEventListener("deviceready", function(){
+		
+		var boton=$("#guardar");
+		boton.tap(function(){
+	var marc=$("#marca").val();
+	var mod=$("#modelo").val();
+	var col=$("#color").val();
+	var prec=$("#precio").val();
+	
+	if (marc!="" && mod!="" && col!="" && prec!=""){
+		enviar (marc, mod, col, prec);
+		} else {
+			//alert("Funciona")
+			alert("Favor de Registrar Datos en los campos");
+			}
+			
+			});
+			var btnconsulta=$("#consultar");
+			btnconsulta.tap(function(){
+				
+				$.ajax({
+			type:"POST",
+			url:"http://developerweb.260mb.net/tercerp/consulta.php",
+			data:"",
+			success: consultando
+					});
+				
+				});
+				
+				},false);
+				
+				
+var btneditar = $("#edita");
+btneditar.tap(function(){
+    var idc=$("#idcar").val();
+	var marc1=$("#marca1").val();
+	var mod1=$("#modelo1").val();
+	var col1=$("#color1").val();
+	var prec1=$("#precio1").val();
+	if (idc!="" && marc1!="" &&  mod1!="" && col1!="" && prec1!=""){
+		editar (idc,marc1, mod1, col1, prec1);
+		} else {
+			//alert("Funciona")
+			alert("Favor de Registrar Datos en los Campos");
+			}
+});
+
+var btneliminar=$("#elimina");
+btneliminar.tap(function(){
+	var idee=$("#eli").val();
+	if (idee!=""){
+		eliminar (idee);
+		} else {
+			//alert("Funciona")
+			alert("Favor de Ingresar ID");
+			}
+	});
+			
+		});
+		////////////////////////////////////////////////////////////////////////////
+
+    		
+		
+	function enviar (marc, mod, col, prec){
+		$.ajax({
+			
+			type:"POST",
+			//url:"http://developerweb.260mb.net/procesar.php",
+			url:"http://developerweb.260mb.net/tercerp/procesar.php",
+			data: "Marca=" +marc+"&Modelo="+mod+"&Color="+col+"&Precio="+prec,
+			success: onSuccess
+				
+		}).done(function(msg){
+			if(msg==1){
+				
+				}else{
+					
+					}
+					
+		});
+		
+		function onSuccess(data){
+			
+			alert (data);
+			
+			}
+		}
+		
+	function consultando(data){
+			   var registro=$.parseJSON(data);
+               var mostrar=$("#datos");
+			   
+			   for(var i in registro){
+				   mostrar.append(registro[i].idAuto+" "+registro[i].marca+" "+registro[i].modelo+" "+registro[i].color+" "+registro[i].precio+"<br>");
+				   
+				   }
+			               
+		}
+
+function editar (idc,marc1, mod1, col1, prec1){	
+		
+		$.ajax({
+			
+			type:"POST",
+			//url:"http://developerweb.260mb.net/procesar.php",
+			url:"http://developerweb.260mb.net/tercerp/modificar.php",
+			data: "IDCAR="+idc+"&Marca1=" +marc1+"&Modelo1="+mod1+"&Color1="+col1+"&Precio1="+prec1,
+			success: onSuccess
+				
+		}).done(function(msg){
+			if(msg==1){
+				
+				}else{
+					
+					}
+					
+		});
+		
+		function onSuccess(data){
+			
+			alert (data);
+			
+			}
+		
+		}
+		
+function eliminar (idee){	
+		
+		$.ajax({
+			
+			type:"POST",
+			//url:"http://developerweb.260mb.net/procesar.php",
+			url:"http://developerweb.260mb.net/tercerp/eliminar.php",
+			data: "IDE="+idee,
+			success: onSuccess
+				
+		}).done(function(msg){
+			if(msg==1){
+				
+				}else{
+					
+					}
+					
+		});
+		
+		function onSuccess(data){
+			
+			alert (data);
+			
+			}
+		
+		}
+		
+		
+
+		
+ </script>
+ 
+</head> 
+<body> 
+
+<div data-role="page" id="principal">
+	<div data-role="header">
+		<p>Principal</p>
+	</div>
+    
+	<div data-role="content">	
+	<a href="#captura" data-role="button">Capturar</a>
+    <a href="#consultas" data-role="button">Consultas</a>
+    <a href="#Editar" data-role="button">Editar</a>
+    <a href="#Eliminar" data-role="button">Eliminar</a>
+	</div>
+    
+	<div data-role="footer">
+		<h4>Jovany</h4>
+	</div>
+</div>
+
+
+
+
+<div data-role="page" id="captura">
+
+	<div data-role="header">
+		<p>Captura</p>
+	</div>
+    
+	<div data-role="content">	
+    <input type="text" id="marca" placeholder="Marca"> <br/>
+        
+        <input type="text" id="modelo" placeholder="Modelo"><br/>
+        
+        <input type="text" id="color" placeholder="Color"><br/>
+        
+        <input type="text" id="precio" placeholder="Precio"><br/>
+        
+        
+	</div>
+    
+	<div data-role="footer">
+		<h4><a href="#principal" data-role="button">Menu Principal</a>
+        
+        <a href="#" data-role="button" id="guardar">Guardar</a>
+        
+        </h4>
+	</div>
+
+</div>
+
+
+
+
+<div data-role="page" id="consultas">
+
+	<div data-role="header">
+		<p>Consultas</p>
+	</div>
+    
+	<div data-role="content">
+    <a href="#" id="consultar" data-role="button">Consultar</a>
+    	
+<p>Datos</p>
+
+<div id="datos">
+
+</div>
+	</div>
+    
+	<div data-role="footer">
+		<h4><h4><a href="#principal" data-role="button">Menu Principal</a></h4>
+	</div>
+
+</div>
+
+<div data-role="page" id="Editar">
+
+	<div data-role="header">
+		<p>Consultas</p>
+	</div>
+    
+	<div data-role="content">
+    <label for="idcar">Ingrese Id del Auto a Editar</label>
+    <input type="number" name="idcar" id="idcar" placeholder="Id de Auto"><br/>
+    
+    <input type="text" id="marca1" placeholder="Marca"> <br/>
+        
+        <input type="text" id="modelo1" placeholder="Modelo"><br/>
+        
+        <input type="text" id="color1" placeholder="Color"><br/>
+        
+        <input type="text" id="precio1" placeholder="Precio"><br/>
+    <a href="#" id="edita" data-role="button">Editar</a>
+    	
+<p>Datos</p>
+
+<div id="datos">
+
+</div>
+	</div>
+    
+	<div data-role="footer">
+		<h4><h4><a href="#principal" data-role="button">Menu Principal</a></h4>
+	</div>
+
+</div>
+
+
+<div data-role="page" id="Eliminar">
+
+	<div data-role="header">
+		<p>Consultas</p>
+	</div>
+    
+	<div data-role="content">
+    <label for eli>Ingresa el ID del Auto a Eliminar</label>
+    <input type="text" id="eli" name="eli" placeholder="ID del Auto">
+    <a href="#" id="elimina" data-role="button">Elimina</a>
+    	
+<p>Datos</p>
+
+<div id="datos">
+
+</div>
+	</div>
+    
+	<div data-role="footer">
+		<h4><h4><a href="#principal" data-role="button">Menu Principal</a></h4>
+	</div>
+
+</div>
+
+
+
+</body>
+</html>
